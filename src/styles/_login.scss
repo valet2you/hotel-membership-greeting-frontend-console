@@ -1,0 +1,93 @@
+.login-page {
+  background-color: #f9fbfd;
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  .login-wrapper {
+    max-width: 27rem;
+    width: 100%;
+    padding: 0 1rem;
+
+    .app-logo {
+        background-image: url(https://viralops.com/wp-content/uploads/2021/01/3.png);
+      width: 70px;
+    height: 100px;
+      background-repeat: no-repeat;
+      background-size: contain;
+      margin: auto;
+      display: block;
+      margin-bottom: 1rem;
+    }
+
+    .login-title {
+      width: 100%;
+      .title {
+        text-align: center;
+        color: #1b1464;
+        font-size: 22px;
+        font-weight: 600;
+        margin-bottom: 5px;
+      }
+
+      .subtitle {
+        font-size: 14px;
+        font-weight: 500;
+        margin-bottom: 3rem;
+        color: #1b1464;
+        margin-bottom: 1rem;
+        text-align: center;
+      }
+    }
+
+    .login-box {
+      border: 1px solid #e3ebf6;
+      margin: 0;
+      background-color: #fff;
+      border-radius: 8px;
+      box-shadow: 0 0 5px 0 rgba(37, 117, 252, 0.2);
+      display: flex;
+      overflow: auto;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      padding: 1rem;
+      .form-control {
+        margin-bottom: 15px;
+        min-height: 45px;
+        border-radius: 8px;
+        font-size: 14px;
+      }
+      .btn {
+        display: flex;
+        align-items: center;
+        width: 13rem;
+        text-align: center;
+        justify-content: center;
+        margin-top: 1rem;
+        i {
+          margin-right: 5px;
+          font-size: 0.85rem;
+        }
+        &.btn-secondary {
+          background: #00297a;
+          margin: 0;
+          border-color: #00297a;
+        }
+      }
+      .or {
+        margin: 0.5rem 0;
+        text-align: center;
+        color: #1b1464;
+        font-size: 14px;
+        font-weight: 500;
+      }
+    }
+    .copyright {
+      text-align: center;
+      font-size: 0.75rem;
+      margin-top: 1rem;
+    }
+  }
+}
