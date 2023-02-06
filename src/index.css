@@ -16,10 +16,7 @@ code {
     padding: 0;
     margin: 0;
 }
-.btn-primary-alt {
-    border-color: #ffc800;
-    color: #ffc800;
-}
+
 .btn {
     background: #fff;
     border: 1px solid #cfe1e8;
@@ -28,6 +25,14 @@ code {
     font-size: 13px;
     font-weight: 500;
     padding: 7px 15px;
+}
+.btn-primary-alt {
+    border-color: #ffc800;
+    color: #ffc800;
+}
+.btn-primary {
+    background-color: #1b1464;
+    color: #fff;
 }
 
 label {
