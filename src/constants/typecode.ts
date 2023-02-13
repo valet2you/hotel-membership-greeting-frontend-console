@@ -27,8 +27,8 @@ export const templateListSchema = {
 export const templateContentSchema: templateContentInterface = {
     GOLD: [
         {
-            name: 'title',
-            label: 'Title',
+            name: 'welcomeTitle',
+            label: 'Welcome Title',
             type: 'text',
             placeHolder: 'title',
         },
@@ -47,7 +47,7 @@ export const templateContentSchema: templateContentInterface = {
     ],
     PLATINUM: [
         {
-            name: 'title',
+            name: 'welcomeTitle',
             label: 'Title',
             type: 'text',
             placeHolder: 'title',
@@ -55,7 +55,7 @@ export const templateContentSchema: templateContentInterface = {
     ],
     TITANIUM: [
         {
-            name: 'title',
+            name: 'welcomeTitle',
             label: 'Title',
             type: 'text',
             placeHolder: 'title',

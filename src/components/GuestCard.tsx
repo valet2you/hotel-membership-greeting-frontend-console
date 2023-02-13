@@ -1,52 +1,81 @@
-import { EditIcon } from '@chakra-ui/icons'
-import { Box, FormControl, FormLabel, Input, Select, SimpleGrid, Textarea } from '@chakra-ui/react'
+import { EditIcon } from '@chakra-ui/icons';
+import {
+    Box,
+    FormControl,
+    FormLabel,
+    Input,
+    Select,
+    SimpleGrid,
+    Textarea,
+} from '@chakra-ui/react';
 import React, { useState } from 'react';
-import { templateContentSchema, templateListSchema } from '../constants/typecode';
-interface GuestCardProps {
-    guest: number;
-    index: number;
-    key: number;
-    selectedUser: number;
-    template: string;
-}
+import {
+    templateContentSchema,
+    templateListSchema,
+} from '../constants/typecode';
+import { GuestCardProps, optionsType } from '../interfaces';
+import { updateTemplateContent } from '../services/apiService';
+
+
 const GuestCard = (props: GuestCardProps) => {
-    const { selectedUser, index, template } = props;
-    const [templateType, setTemplateType] = useState("GOLD");
-
-
-
-    const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-        // setError('');
-        let value = null;
+    const {
+        id,
+        content,
+        selectedUserID,
+        template_type,
+        guestCardClickHandler,
+    } = props;
+    const [templateType, setTemplateType] = useState(template_type || '');
+    const [templateContent, setTemplateContent] = useState({
+        ...content,
+    });
+    const handleChange = (
+        e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+    ) => {
         const name = e.target.name;
-        const type = e.target.type;
-        if (type === 'checkbox') {
-            // value = e.target.checked;
-            // if (name === 'enabled' || name === 'is_recommended') {
-            //     value = Number(value);
-            // }
-        } else if (type === 'file') {
-            // value = e.target.files[0];
-            // convertImageToBase64(value, (imgURL) => setLocalImageURL(imgURL));
-        } else {
-            value = e.target.value;
-        }
-        // setFormData({ ...formData, [name]: value });
+        const value = e.target.value;
+        setTemplateContent({ ...templateContent, [name]: value });
     };
 
-    const templateList = templateListSchema["WMaldives"]
-    const contentOptionList = templateContentSchema[templateType]
+    const updateContent = async () => {
+        try {
+            const data = {
+                id:10,
+                template_type: templateType,
+                content: templateContent,
+            };
+            const response = await updateTemplateContent(data);
+            console.log(response);
+            if(response.status === 200) {
+            }
+        } catch (error) {}
+    };
+
+    const templateList = templateListSchema['WMaldives'];
+    const contentOptionList = templateContentSchema[templateType];
+    if (!templateType || contentOptionList.length === 0) return null;
+
     return (
-        <div className={'guest-card ' + (selectedUser === index ? "selected" : "")}>
-            <div className='guest-card-header'>
-                <div className='primary-name'>Vineet -  Room 4001</div>
+        <div
+            className={
+                'guest-card ' + (selectedUserID === id ? 'selected' : '')
+            }
+        >
+            <div
+                className='guest-card-header'
+                onClick={() => guestCardClickHandler(id)}
+            >
+                <div className='primary-name'>
+                    <small>Guest Name:</small> {templateContent['guestName']} ||{' '}
+                    <small>Template :</small> {templateType}
+                </div>
                 <div className='primary-btn'>
                     <button className='btn btn-icon'>
                         <EditIcon />
                     </button>
                 </div>
             </div>
-            {selectedUser === index && (
+            {selectedUserID === id && (
                 <div className='guest-details'>
                     <SimpleGrid columns={3} spacing={5}>
                         <Box>
@@ -56,36 +85,63 @@ const GuestCard = (props: GuestCardProps) => {
                                     placeholder='Select option'
                                     name='templateType'
                                     value={templateType}
-                                    onChange={(e) => setTemplateType(e.target.value)}>
-                                    {
-                                        templateList.map(template => <option value={template.templateID}>{template.name}</option>)
+                                    onChange={(e) =>
+                                        setTemplateType(e.target.value)
                                     }
+                                >
+                                    {templateList.map((template,index) => (
+                                        <option value={template.templateID} key={index}>
+                                            {template.name}
+                                        </option>
+                                    ))}
                                 </Select>
                             </FormControl>
                         </Box>
                     </SimpleGrid>
                     <SimpleGrid columns={2} spacing={2}>
-                        {contentOptionList.map(option => {
+                        {contentOptionList.map((option: optionsType, index) => {
                             return (
-                                <Box>
+                                <Box key={index}>
                                     <FormControl mb={1}>
                                         <FormLabel>{option.label}</FormLabel>
-                                        {option.type === 'text' ?
-                                            <Input type={option.type} name={option.name} value={"name"} placeholder={option.placeHolder} onChange={(e) => handleChange(e)} />
-                                            :
-                                            <Textarea value={"name"} name={option.name} placeholder={option.placeHolder} onChange={(e) => handleChange(e)} />
-                                        }
+                                        {option.type === 'text' ? (
+                                            <Input
+                                                type={option.type}
+                                                name={option.name}
+                                                value={
+                                                    templateContent[
+                                                        option.name as keyof typeof templateContent
+                                                    ] as string
+                                                }
+                                                placeholder={option.placeHolder}
+                                                onChange={(e) =>
+                                                    handleChange(e)
+                                                }
+                                            />
+                                        ) : (
+                                            <Textarea
+                                                value={
+                                                    templateContent[
+                                                        option.name as keyof typeof templateContent
+                                                    ] as string
+                                                }
+                                                name={option.name}
+                                                placeholder={option.placeHolder}
+                                                onChange={(e) =>
+                                                    handleChange(e)
+                                                }
+                                            />
+                                        )}
                                     </FormControl>
                                 </Box>
-                            )
+                            );
                         })}
                     </SimpleGrid>
-                    <button className='btn btn-primary'>Update</button>
-
+                    <button className='btn btn-primary' onClick={updateContent}>Update</button>
                 </div>
             )}
         </div>
-    )
-}
+    );
+};
 
-export default GuestCard
+export default GuestCard;

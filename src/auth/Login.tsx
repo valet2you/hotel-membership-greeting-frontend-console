@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
     Button,
     FormControl,
@@ -8,26 +8,34 @@ import {
     InputLeftElement,
     useToast,
 } from '@chakra-ui/react';
-// import { loginUser } from '../services/apiService';
 // import { getCookie, setCookie } from '../helpers/cookieHelper';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { EmailIcon, LockIcon } from '@chakra-ui/icons';
+import { loginUser } from '../services/apiService';
+import { getCookie, setCookie } from '../helpers/cookieHelper';
 
 const Login = () => {
     const [loading, setLoading] = useState(false);
     const [loginData, setLoginData] = useState({
-        email: '',
+        username: '',
         password: '',
     });
     let navigate = useNavigate();
-    const location = useLocation();
     const toast = useToast();
 
+    
+    useEffect(() => {
+        const token = getCookie('__user-token');
+        if (token) {
+            navigate('/', { replace: true });
+        }
+    }, []);
+
     const handleLoginClick = async () => {
-        if (!loginData.email || !loginData.email.trim()) {
+        if (!loginData.username || !loginData.username.trim()) {
             toast({
-                title: 'Email is required!',
-                description: 'Please enter a valid email!',
+                title: 'Username is required!',
+                description: 'Please enter a valid username!',
                 status: 'error',
                 duration: 2000,
                 isClosable: true,
@@ -46,29 +54,30 @@ const Login = () => {
         }
         try {
             setLoading(true);
-            // const response = await loginUser(JSON.stringify(loginData));
-            // if (response.status === 200) {
-            //     const data = response.data?.data || {};
-            //     if (data && data.token) {
-            //         setCookie('token', `${data.token}`, 1);
-            //         navigate('/', { replace: true });
-            //     } else {
-            //         toast({
-            //             title: 'Invalid username or password',
-            //             status: 'error',
-            //             duration: 2000,
-            //             isClosable: true,
-            //         });
-            //     }
-            // }
-            // if (response.status === 400 || response.status === 401) {
-            //     toast({
-            //         title: 'Invalid username or password',
-            //         status: 'error',
-            //         duration: 2000,
-            //         isClosable: true,
-            //     });
-            // }
+            let response = await loginUser(loginData);
+            if (response.status === 200) {
+                let result = await response.json();
+                const token = result.response.access_token;
+                if (token) {
+                    setCookie('__user-token', `${token}`, 1);
+                    navigate('/', { replace: true });
+                } else {
+                    toast({
+                        title: 'Invalid username or password',
+                        status: 'error',
+                        duration: 2000,
+                        isClosable: true,
+                    });
+                }
+            }
+            if (response.status === 400 || response.status === 401) {
+                toast({
+                    title: 'Invalid username or password',
+                    status: 'error',
+                    duration: 2000,
+                    isClosable: true,
+                });
+            }
         } catch (error) {
             console.error(error);
             // const { response } = error;
@@ -83,21 +92,16 @@ const Login = () => {
         }
     };
 
-    // const handleInputChange = (e) => {
-    //     const name = e.target.name;
-    //     const value = e.target.value;
-    //     setLoginData({ ...loginData, [name]: value });
-    // };
-    // const token = getCookie('token');
-    // if (token) {
-    //     navigate('/', { replace: true });
-    // }
+    const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const name = e.target.name;
+        const value = e.target.value;
+        setLoginData({ ...loginData, [name]: value });
+    };
+
     return (
         <div className='login-page'>
             <div className='login-wrapper'>
-                <div
-                    className='app-logo '
-                ></div>
+                <div className='app-logo '></div>
                 <div className='login-box'>
                     <div className='login-title text-center'>
                         <div className='title'>Welcome back,</div>
@@ -121,8 +125,9 @@ const Login = () => {
                                 colorScheme='gray'
                                 marginBottom={'0.5rem'}
                                 fontSize={'13px'}
-                                name='email'
-                            // onChange={(e) => handleInputChange(e)}
+                                name='username'
+                                value={loginData.username}
+                                onChange={(e) => handleInputChange(e)}
                             />
                         </InputGroup>
                     </FormControl>
@@ -143,7 +148,8 @@ const Login = () => {
                                 marginBottom={'0.5rem'}
                                 fontSize={'13px'}
                                 name='password'
-                            // onChange={(e) => handleInputChange(e)}
+                                value={loginData.password}
+                                onChange={(e) => handleInputChange(e)}
                             />
                         </InputGroup>
                     </FormControl>
@@ -164,5 +170,4 @@ const Login = () => {
     );
 };
 
-
-export default Login
+export default Login;
