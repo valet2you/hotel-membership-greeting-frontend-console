@@ -3,11 +3,12 @@ import GuestCard from '../components/GuestCard';
 import { templateContent } from '../interfaces';
 import {
     createTemplateContent,
-    fetchAllGuests,
     fetchAllTemplateContent,
+    generateHotelID,
 } from '../services/apiService';
 const Dashboard = () => {
     const [guestList, setGuestList] = useState([]);
+    const [isLoading, setIsLoading] = useState(false);
     const [selectedUserID, setSelectedUserID] = useState(null);
 
     useEffect(() => {
@@ -15,6 +16,8 @@ const Dashboard = () => {
     }, []);
 
     const getAllTemplateContent = async () => {
+        setIsLoading(true);
+        setSelectedUserID(null);
         try {
             const response = await fetchAllTemplateContent();
             if (response.status === 200) {
@@ -23,22 +26,33 @@ const Dashboard = () => {
                     setGuestList(result.response || []);
                 }
             }
-        } catch (error) {}
+        } catch (error) {
+        } finally {
+            setIsLoading(false);
+        }
     };
     const createTemplate = async () => {
         try {
             const body = {
-                id:10,
-                template_type: 'TITANIUM',
+                id: 10,
+                name: 'P1',
+                hotel_id: 1,
+                template_type: 'PLATINUM',
                 content: {
                     welcomeTitle: 'Welcom to W Maldives',
-                    guestName: 'test user',
+                    guestName: 'new guest user',
                     description: 'This is a test description',
                 },
             };
             const response = await createTemplateContent(body);
         } catch (error) {}
     };
+    const createHotelID = async () => {
+        try {
+            const response = await generateHotelID();
+        } catch (error) {}
+    };
+
     const guestCardClickHandler = (id: any) => {
         if (id !== selectedUserID) {
             setSelectedUserID(id);
@@ -57,17 +71,23 @@ const Dashboard = () => {
                     </div>
                 </div>
                 <div className='list-container'>
-                    {guestList.map((guest: templateContent, index) => (
-                        <GuestCard
-                            id={guest.id}
-                            key={index}
-                            selectedUserID={selectedUserID}
-                            template_type={guest.template_type}
-                            guestCardClickHandler={guestCardClickHandler}
-                            getAllTemplateContent={getAllTemplateContent}
-                            content={guest.content}
-                        />
-                    ))}
+                    {isLoading ? (
+                        <p>Loading...</p>
+                    ) : (
+                        guestList.map((guest: templateContent, index) => (
+                            <GuestCard
+                                id={guest.id}
+                                key={index}
+                                selectedUserID={selectedUserID}
+                                template_type={guest.template_type}
+                                guestCardClickHandler={guestCardClickHandler}
+                                getAllTemplateContent={getAllTemplateContent}
+                                content={guest.content}
+                                hotel_id={guest.hotel_id}
+                                name={guest.name}
+                            />
+                        ))
+                    )}
                 </div>
                 {/* <div className='add-new-guest-card'>
                     <button
@@ -75,6 +95,11 @@ const Dashboard = () => {
                         onClick={createTemplate}
                     >
                         Add new Guest
+                    </button>
+                </div>
+                <div className='add-new-guest-card'>
+                    <button className='btn btn-primary' onClick={createHotelID}>
+                        create Hotel ID
                     </button>
                 </div> */}
             </div>

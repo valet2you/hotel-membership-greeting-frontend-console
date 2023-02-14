@@ -11,7 +11,8 @@ export interface contentType {
 }
 export interface templateContent {
     id: number;
-    name?: string;
+    name: string;
+    hotel_id:number;
     template_type: string;
     content: contentType;
 }
@@ -21,7 +22,8 @@ export interface GuestCardProps {
     selectedUserID: null | number;
     guestCardClickHandler(firstArgument: number): void;
     getAllTemplateContent(): void;
-    
+    hotel_id:number;
+    name: string;
     content: contentType;
 }
 export interface optionsType {

@@ -15,7 +15,7 @@ import {
 } from '../constants/typecode';
 import { GuestCardProps, optionsType } from '../interfaces';
 import { updateTemplateContent } from '../services/apiService';
-
+import { useToast } from '@chakra-ui/react';
 
 const GuestCard = (props: GuestCardProps) => {
     const {
@@ -23,12 +23,17 @@ const GuestCard = (props: GuestCardProps) => {
         content,
         selectedUserID,
         template_type,
+        name,
+        hotel_id,
         guestCardClickHandler,
+        getAllTemplateContent,
     } = props;
     const [templateType, setTemplateType] = useState(template_type || '');
+    const [updateLoading, setUpdateLoading] = useState(false);
     const [templateContent, setTemplateContent] = useState({
         ...content,
     });
+    const toast = useToast();
     const handleChange = (
         e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
     ) => {
@@ -38,17 +43,32 @@ const GuestCard = (props: GuestCardProps) => {
     };
 
     const updateContent = async () => {
+        setUpdateLoading(true);
         try {
             const data = {
-                id:10,
-                template_type: templateType,
+                id,
+                name,
+                hotel_id,
                 content: templateContent,
+                template_type: templateType,
             };
             const response = await updateTemplateContent(data);
-            console.log(response);
-            if(response.status === 200) {
+            if (response.status === 200) {
+                const result = await response.json();
+                console.log(result);
+
+                toast({
+                    title: 'Template updated successfully',
+                    status: 'success',
+                    duration: 2000,
+                    isClosable: true,
+                });
+                getAllTemplateContent();
             }
-        } catch (error) {}
+        } catch (error) {
+        } finally {
+            setUpdateLoading(false);
+        }
     };
 
     const templateList = templateListSchema['WMaldives'];
@@ -66,6 +86,7 @@ const GuestCard = (props: GuestCardProps) => {
                 onClick={() => guestCardClickHandler(id)}
             >
                 <div className='primary-name'>
+                    <span className='name'>{name}</span>
                     <small>Guest Name:</small> {templateContent['guestName']} ||{' '}
                     <small>Template :</small> {templateType}
                 </div>
@@ -89,8 +110,11 @@ const GuestCard = (props: GuestCardProps) => {
                                         setTemplateType(e.target.value)
                                     }
                                 >
-                                    {templateList.map((template,index) => (
-                                        <option value={template.templateID} key={index}>
+                                    {templateList.map((template, index) => (
+                                        <option
+                                            value={template.templateID}
+                                            key={index}
+                                        >
                                             {template.name}
                                         </option>
                                     ))}
@@ -137,7 +161,11 @@ const GuestCard = (props: GuestCardProps) => {
                             );
                         })}
                     </SimpleGrid>
-                    <button className='btn btn-primary' onClick={updateContent}>Update</button>
+                    <button className='btn btn-primary' onClick={updateContent} disabled={updateLoading}
+
+                    >
+                        {updateLoading  ? " Updating...":  "Update"}
+                    </button>
                 </div>
             )}
         </div>

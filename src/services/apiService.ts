@@ -52,10 +52,6 @@ axios.interceptors.response.use(
 );
 
 
-
-export const fetchAllGuests = () => {
-    return axios.get('https://api.github.com/users/');
-};
 export const loginUser = (userData: userLoginData) => {
     const response = fetch(baseURL + '/auth/login', {
         method: 'POST',
@@ -94,16 +90,35 @@ export const createTemplateContent = (templateData: templateContent) => {
     return response;
 };
 
-export const updateTemplateContent = (templateData: templateContent) => {
+export const  generateHotelID =  () => {
+    const obj= {
+        name:"Test",
+        email:"test@example.com",
+    }
     const token = getCookie('__user-token');
-    const response = fetch(baseURL + '/template-contents', {
+    const response = fetch(baseURL + '/hotels', {
+        method: 'POST',
+        mode: 'cors',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `${token}`,
+        },
+        body: JSON.stringify(obj),
+    });
+    return response;
+};
+
+export const updateTemplateContent = (templateData: templateContent) => {
+    const {id,...rest} = templateData;
+    const token = getCookie('__user-token');
+    const response = fetch(baseURL + '/template-contents/' + id, {
         method: 'PUT',
         mode: 'cors',
         headers: {
             'Content-Type': 'application/json',
             'Authorization': `${token}`,
         },
-        body: JSON.stringify(templateData),
+        body: JSON.stringify(rest),
     });
     return response;
 };

@@ -48,15 +48,7 @@ export const templateContentSchema: templateContentInterface = {
     PLATINUM: [
         {
             name: 'welcomeTitle',
-            label: 'Title',
-            type: 'text',
-            placeHolder: 'title',
-        },
-    ],
-    TITANIUM: [
-        {
-            name: 'welcomeTitle',
-            label: 'Title',
+            label: 'Welcome Title',
             type: 'text',
             placeHolder: 'title',
         },
@@ -65,6 +57,32 @@ export const templateContentSchema: templateContentInterface = {
             label: 'Guest Name',
             type: 'text',
             placeHolder: 'Enter guest name',
+        },
+        {
+            name: 'description',
+            label: 'Description',
+            type: 'textarea',
+            placeHolder: 'Enter description',
+        },
+    ],
+    TITANIUM: [
+        {
+            name: 'welcomeTitle',
+            label: 'Welcome Title',
+            type: 'text',
+            placeHolder: 'title',
+        },
+        {
+            name: 'guestName',
+            label: 'Guest Name',
+            type: 'text',
+            placeHolder: 'Enter guest name',
+        },
+        {
+            name: 'description',
+            label: 'Description',
+            type: 'textarea',
+            placeHolder: 'Enter description',
         },
     ],
 };
