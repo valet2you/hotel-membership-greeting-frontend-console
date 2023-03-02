@@ -109,6 +109,7 @@ const GuestCard = (props: GuestCardProps) => {
                                     onChange={(e) =>
                                         setTemplateType(e.target.value)
                                     }
+                                    disabled
                                 >
                                     {templateList.map((template, index) => (
                                         <option

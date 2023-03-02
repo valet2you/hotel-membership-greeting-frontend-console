@@ -1,11 +1,14 @@
 import axios from 'axios';
 import { getCookie } from '../helpers/cookieHelper';
 import { templateContent, userLoginData } from '../interfaces';
-
 const baseURL =
     process.env.REACT_APP_NODE_ENV === 'production'
-        ? `https://pvr-api.valet2you.in`
-        : 'http://localhost:8080';
+        ? `https://prod-hmg.valet2you.in`
+        : 'https://dev-hmg.valet2you.in';
+
+
+// admin
+// Secure@2033
 
 //  axio header setup
 axios.defaults.baseURL = baseURL;
@@ -21,10 +24,10 @@ axios.defaults.withCredentials = true;
 // Add a request interceptor
 axios.interceptors.request.use(
     function (config) {
-        // const token = getToken();
-        // if (token) {
-        //     config.headers.common['Authorization'] = 'Bearer ' + token;
-        // }
+        const token = getCookie("__user-token");
+        if (token) {
+            config.headers.common['Authorization'] =  token;
+        }
         return config;
     },
     function (error) {
