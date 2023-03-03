@@ -89,7 +89,7 @@ const Dashboard = () => {
                         ))
                     )}
                 </div>
-                {/* <div className='add-new-guest-card'>
+                <div className='add-new-guest-card'>
                     <button
                         className='btn btn-primary'
                         onClick={createTemplate}
@@ -97,7 +97,7 @@ const Dashboard = () => {
                         Add new Guest
                     </button>
                 </div>
-                <div className='add-new-guest-card'>
+                {/* <div className='add-new-guest-card'>
                     <button className='btn btn-primary' onClick={createHotelID}>
                         create Hotel ID
                     </button>
