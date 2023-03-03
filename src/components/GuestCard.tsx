@@ -10,6 +10,7 @@ import {
 } from '@chakra-ui/react';
 import React, { useState } from 'react';
 import {
+    optionList,
     templateContentSchema,
     templateListSchema,
 } from '../constants/typecode';
@@ -31,8 +32,10 @@ const GuestCard = (props: GuestCardProps) => {
     const [templateType, setTemplateType] = useState(template_type || '');
     const [updateLoading, setUpdateLoading] = useState(false);
     const [templateContent, setTemplateContent] = useState({
+        name: name,
         ...content,
     });
+    const [templateName,setTemplateName] = useState(name || "")
     const toast = useToast();
     const handleChange = (
         e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -47,7 +50,7 @@ const GuestCard = (props: GuestCardProps) => {
         try {
             const data = {
                 id,
-                name,
+                name: templateName,
                 hotel_id,
                 content: templateContent,
                 template_type: templateType,
@@ -73,7 +76,7 @@ const GuestCard = (props: GuestCardProps) => {
 
     const templateList = templateListSchema['WMaldives'];
     const contentOptionList = templateContentSchema[templateType];
-    if (!templateType || contentOptionList.length === 0) return null;
+    if (!templateType || contentOptionList.length === 0) return <p>No Option</p>;
 
     return (
         <div
@@ -113,6 +116,28 @@ const GuestCard = (props: GuestCardProps) => {
                                     {templateList.map((template, index) => (
                                         <option
                                             value={template.templateID}
+                                            key={index}
+                                        >
+                                            {template.name}
+                                        </option>
+                                    ))}
+                                </Select>
+                            </FormControl>
+                        </Box>
+                        <Box>
+                            <FormControl mb={3}>
+                                <FormLabel>Template name</FormLabel>
+                                <Select
+                                    placeholder='Select option'
+                                    name='name'
+                                    value={templateContent.name}
+                                    onChange={(e) =>
+                                        setTemplateName(e.target.value)
+                                    }
+                                >
+                                    {optionList.map((template, index) => (
+                                        <option
+                                            value={template.value}
                                             key={index}
                                         >
                                             {template.name}
@@ -161,10 +186,12 @@ const GuestCard = (props: GuestCardProps) => {
                             );
                         })}
                     </SimpleGrid>
-                    <button className='btn btn-primary' onClick={updateContent} disabled={updateLoading}
-
+                    <button
+                        className='btn btn-primary'
+                        onClick={updateContent}
+                        disabled={updateLoading}
                     >
-                        {updateLoading  ? " Updating...":  "Update"}
+                        {updateLoading ? ' Updating...' : 'Update'}
                     </button>
                 </div>
             )}

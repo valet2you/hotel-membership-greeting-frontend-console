@@ -45,6 +45,10 @@ const Dashboard = () => {
                 },
             };
             const response = await createTemplateContent(body);
+            console.log(response)
+            if(response.status === 201) {
+                getAllTemplateContent()
+            }
         } catch (error) {}
     };
     const createHotelID = async () => {
