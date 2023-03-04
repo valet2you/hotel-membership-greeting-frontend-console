@@ -257,3 +257,42 @@
         }
     }
 }
+.actions-wrapper{
+    display: flex;
+    margin-top: 1rem;
+    button{
+        white-space: nowrap;
+    }
+}
+
+.qr-link-wrapper{
+    display: inline-flex;
+    // width: 100%;
+    /* height: 10px; */
+    border: 1px solid #adadad;
+    padding: 0px;
+    border-radius: 8px;
+    height: 2.5rem;
+    margin-left: 2px;
+    .qr-link{
+        background-color: #e2e8f0;
+        width: 100%;
+        overflow: hidden;
+        font-size: 12px;
+        padding: 10px 1rem;
+        white-space: nowrap;
+        overflow: hidden;
+        max-width: 30rem;
+        border-radius: 8px 0px 0 8px;
+    }
+    .qr-copy-btn{
+        width: 5rem;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        color: #305263;
+        border-left: 1px solid #adadad;
+        font-weight: 600;
+        font-size: 13px;
+    }
+}

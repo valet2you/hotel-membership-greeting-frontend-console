@@ -1,4 +1,4 @@
-import { EditIcon } from '@chakra-ui/icons';
+import { CopyIcon, EditIcon } from '@chakra-ui/icons';
 import {
     Box,
     FormControl,
@@ -15,7 +15,11 @@ import {
     templateListSchema,
 } from '../constants/typecode';
 import { GuestCardProps, optionsType } from '../interfaces';
-import { updateTemplateContent } from '../services/apiService';
+import {
+    baseURL,
+    createQRLink,
+    updateTemplateContent,
+} from '../services/apiService';
 import { useToast } from '@chakra-ui/react';
 
 const GuestCard = (props: GuestCardProps) => {
@@ -31,11 +35,12 @@ const GuestCard = (props: GuestCardProps) => {
     } = props;
     const [templateType, setTemplateType] = useState(template_type || '');
     const [updateLoading, setUpdateLoading] = useState(false);
+    const [qrLink, setQRLink] = useState('');
     const [templateContent, setTemplateContent] = useState({
         name: name,
         ...content,
     });
-    const [templateName,setTemplateName] = useState(name || "")
+    const [templateName, setTemplateName] = useState(name || '');
     const toast = useToast();
     const handleChange = (
         e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -73,10 +78,32 @@ const GuestCard = (props: GuestCardProps) => {
             setUpdateLoading(false);
         }
     };
-
+    const generateQRLink = async (id: Number) => {
+        try {
+            const response = await createQRLink(id);
+            if (response.status === 200) {
+                const result = await response.json();
+                console.log(result);
+                if (result && result.response) {
+                    let hotelLink = `${baseURL}/welcome/${result.response}`;
+                    setQRLink(hotelLink);
+                }
+            }
+        } catch (error) {}
+    };
+    const copyToClipboard = () => {
+        navigator.clipboard.writeText(qrLink);
+        toast({
+            title: 'Copied to clipboard',
+            status: 'success',
+            duration: 1000,
+            isClosable: true,
+        });
+    };
     const templateList = templateListSchema['WMaldives'];
     const contentOptionList = templateContentSchema[templateType];
-    if (!templateType || contentOptionList.length === 0) return <p>No Option</p>;
+    if (!templateType || contentOptionList.length === 0)
+        return <p>No Option</p>;
 
     return (
         <div
@@ -186,13 +213,34 @@ const GuestCard = (props: GuestCardProps) => {
                             );
                         })}
                     </SimpleGrid>
-                    <button
-                        className='btn btn-primary'
-                        onClick={updateContent}
-                        disabled={updateLoading}
-                    >
-                        {updateLoading ? ' Updating...' : 'Update'}
-                    </button>
+                    <div className='actions-wrapper'>
+                        <button
+                            className='btn btn-primary'
+                            onClick={updateContent}
+                            disabled={updateLoading}
+                        >
+                            {updateLoading ? ' Updating...' : 'Update'}
+                        </button>
+                        <button
+                            className='btn btn-primary'
+                            onClick={() => generateQRLink(id)}
+                            disabled={updateLoading}
+                        >
+                            generate QR Link
+                        </button>
+                        {qrLink && (
+                            <div className='qr-link-wrapper'>
+                                <div className='qr-link'>{qrLink}</div>
+                                <div
+                                    className='qr-copy-btn'
+                                    onClick={copyToClipboard}
+                                >
+                                    <CopyIcon />
+                                    Copy
+                                </div>
+                            </div>
+                        )}
+                    </div>
                 </div>
             )}
         </div>

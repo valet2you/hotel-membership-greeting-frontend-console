@@ -1,11 +1,10 @@
 import axios from 'axios';
 import { getCookie } from '../helpers/cookieHelper';
 import { templateContent, userLoginData } from '../interfaces';
-const baseURL =
+export const baseURL =
     process.env.REACT_APP_NODE_ENV === 'production'
         ? `https://prod-hmg.valet2you.in`
         : 'https://dev-hmg.valet2you.in';
-
 
 // admin
 // Secure@2033
@@ -24,9 +23,9 @@ axios.defaults.withCredentials = true;
 // Add a request interceptor
 axios.interceptors.request.use(
     function (config) {
-        const token = getCookie("__user-token");
+        const token = getCookie('__user-token');
         if (token) {
-            config.headers.common['Authorization'] =  token;
+            config.headers.common['Authorization'] = token;
         }
         return config;
     },
@@ -74,39 +73,39 @@ export const logoutUser = () => {
         mode: 'cors',
         headers: {
             'Content-Type': 'application/json',
-            'Authorization': `${token}`,
+            Authorization: `${token}`,
         },
     });
     return response;
 };
 
 export const createTemplateContent = (templateData: templateContent) => {
-    const {id,...rest} = templateData;
+    const { id, ...rest } = templateData;
     const token = getCookie('__user-token');
     const response = fetch(baseURL + '/template-contents', {
         method: 'POST',
         mode: 'cors',
         headers: {
             'Content-Type': 'application/json',
-            'Authorization': `${token}`,
+            Authorization: `${token}`,
         },
         body: JSON.stringify(rest),
     });
     return response;
 };
 
-export const  generateHotelID =  () => {
-    const obj= {
-        name:"Test",
-        email:"test@example.com",
-    }
+export const generateHotelID = () => {
+    const obj = {
+        name: 'Test',
+        email: 'test@example.com',
+    };
     const token = getCookie('__user-token');
     const response = fetch(baseURL + '/hotels', {
         method: 'POST',
         mode: 'cors',
         headers: {
             'Content-Type': 'application/json',
-            'Authorization': `${token}`,
+            Authorization: `${token}`,
         },
         body: JSON.stringify(obj),
     });
@@ -114,14 +113,14 @@ export const  generateHotelID =  () => {
 };
 
 export const updateTemplateContent = (templateData: templateContent) => {
-    const {id,...rest} = templateData;
+    const { id, ...rest } = templateData;
     const token = getCookie('__user-token');
     const response = fetch(baseURL + '/template-contents/' + id, {
         method: 'PUT',
         mode: 'cors',
         headers: {
             'Content-Type': 'application/json',
-            'Authorization': `${token}`,
+            Authorization: `${token}`,
         },
         body: JSON.stringify(rest),
     });
@@ -135,7 +134,19 @@ export const fetchAllTemplateContent = () => {
         mode: 'cors',
         headers: {
             'Content-Type': 'application/json',
-            'Authorization': `${token}`,
+            Authorization: `${token}`,
+        },
+    });
+    return response;
+};
+export const createQRLink = (templateID: Number) => {
+    const token = getCookie('__user-token');
+    const response = fetch(baseURL + `/get-enc-template-id/${templateID}`, {
+        method: 'GET',
+        mode: 'cors',
+        headers: {
+            'Content-Type': 'application/json',
+            Authorization: `${token}`,
         },
     });
     return response;
