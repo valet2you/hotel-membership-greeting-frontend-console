@@ -54,7 +54,6 @@ axios.interceptors.response.use(
     }
 );
 
-
 export const loginUser = (userData: userLoginData) => {
     const response = fetch(baseURL + '/auth/login', {
         method: 'POST',
@@ -131,7 +130,7 @@ export const updateTemplateContent = (templateData: templateContent) => {
 
 export const fetchAllTemplateContent = () => {
     const token = getCookie('__user-token');
-    const response = fetch(baseURL + '/template-contents', {
+    const response = fetch(baseURL + '/template-contents?limit=100', {
         method: 'GET',
         mode: 'cors',
         headers: {
