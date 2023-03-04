@@ -1,5 +1,6 @@
 import { Route, Routes } from 'react-router-dom';
 import Login from './auth/Login';
+import RequireAuth from './auth/RequireAuth';
 import Dashboard from './pages/Dashboard';
 import Layout from './pages/Layout';
 import "./styles/__main.scss"
@@ -11,7 +12,9 @@ function App() {
             <Route
                 path='/'
                 element={
-                    <Layout />
+                    <RequireAuth>
+                        <Layout />
+                    </RequireAuth>
                 }
             >
                 <Route index element={<Dashboard />} />

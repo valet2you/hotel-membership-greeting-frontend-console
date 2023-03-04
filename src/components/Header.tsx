@@ -1,13 +1,16 @@
-import { NavLink } from 'react-router-dom';
+import { NavLink, useNavigate } from 'react-router-dom';
+import { deleteCookie } from '../helpers/cookieHelper';
 import { logoutUser } from '../services/apiService';
 
 const Header = () => {
-
+    const navigate = useNavigate();
     const logoutClickHandler = async () => {
         try {
-            // const response = await logoutUser();
-            // console.log(response);
-            console.log('logout-clicked')
+            const response = await logoutUser();
+            if(response.status === 200) {
+                    deleteCookie('__user-token');
+                    navigate('/login', { replace: true });
+            }
         } catch (error) {}
     };
     return (

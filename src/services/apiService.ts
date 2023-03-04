@@ -68,11 +68,14 @@ export const loginUser = (userData: userLoginData) => {
 };
 
 export const logoutUser = () => {
-    const response = fetch(baseURL + '/auth/login', {
+    const token = getCookie('__user-token');
+
+    const response = fetch(baseURL + '/auth/logout', {
         method: 'GET',
         mode: 'cors',
         headers: {
             'Content-Type': 'application/json',
+            'Authorization': `${token}`,
         },
     });
     return response;
