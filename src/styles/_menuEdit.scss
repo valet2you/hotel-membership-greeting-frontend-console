@@ -70,6 +70,19 @@
                 width: 2rem;
                 height: 2rem;
                 font-size: 11px;
+                &.gold{
+                    color: #FFD700;
+                    border-color: #FFD700;
+
+                }
+                &.platinum{
+                    color: rgb(229, 228, 226);
+                    border-color: rgb(229, 228, 226);
+                }
+                &.titanium{
+                    color: #807d7f;
+                    border-color: #807d7f;
+                }
             }
             small{
                 color: #919191;

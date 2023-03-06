@@ -25,6 +25,8 @@ export interface GuestCardProps {
     hotel_id:number;
     name: string;
     content: contentType;
+    generateQRLink(id:number):void;
+    qrLink:string
 }
 export interface optionsType {
     name: string;

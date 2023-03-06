@@ -2,14 +2,17 @@ import { useEffect, useState } from 'react';
 import GuestCard from '../components/GuestCard';
 import { templateContent } from '../interfaces';
 import {
+    createQRLink,
     createTemplateContent,
     fetchAllTemplateContent,
     generateHotelID,
+    guestAppBaseURL,
 } from '../services/apiService';
 const Dashboard = () => {
     const [guestList, setGuestList] = useState([]);
     const [isLoading, setIsLoading] = useState(false);
     const [selectedUserID, setSelectedUserID] = useState(null);
+    const [qrLink, setQRLink] = useState('');
 
     useEffect(() => {
         getAllTemplateContent();
@@ -45,7 +48,6 @@ const Dashboard = () => {
                 },
             };
             const response = await createTemplateContent(body);
-            console.log(response)
             if(response.status === 201) {
                 getAllTemplateContent()
             }
@@ -60,9 +62,23 @@ const Dashboard = () => {
     const guestCardClickHandler = (id: any) => {
         if (id !== selectedUserID) {
             setSelectedUserID(id);
+            generateQRLink(id);
         } else {
             setSelectedUserID(null);
         }
+    };
+    const generateQRLink = async (id: Number) => {
+        try {
+            const response = await createQRLink(id);
+            if (response.status === 200) {
+                const result = await response.json();
+                console.log(result);
+                if (result && result.response) {
+                    let hotelLink = `${guestAppBaseURL}/welcome/${result.response}`;
+                    setQRLink(hotelLink);
+                }
+            }
+        } catch (error) {}
     };
     return (
         <div className='dashboard-container'>
@@ -89,18 +105,21 @@ const Dashboard = () => {
                                 content={guest.content}
                                 hotel_id={guest.hotel_id}
                                 name={guest.name}
+                                qrLink={qrLink}
+                                generateQRLink={generateQRLink}
+
                             />
                         ))
                     )}
                 </div>
-                <div className='add-new-guest-card'>
+                {/* <div className='add-new-guest-card'>
                     <button
                         className='btn btn-primary'
                         onClick={createTemplate}
                     >
                         Add new Guest
                     </button>
-                </div>
+                </div> */}
                 {/* <div className='add-new-guest-card'>
                     <button className='btn btn-primary' onClick={createHotelID}>
                         create Hotel ID
@@ -111,7 +130,7 @@ const Dashboard = () => {
             <div className='guest-app-preview'>
                 <div className='mobile-view'>
                     <iframe
-                        src={`https://main.d1yxbpv58iwpc3.amplifyapp.com`}
+                        src={qrLink}
                         height='554'
                         width='262'
                         title='mobile-view'

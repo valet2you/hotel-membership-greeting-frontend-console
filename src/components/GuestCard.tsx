@@ -10,9 +10,12 @@ import {
 } from '@chakra-ui/react';
 import React, { useState } from 'react';
 import {
+    GOLD,
     optionList,
+    PLATINUM,
     templateContentSchema,
     templateListSchema,
+    TITANIUM,
 } from '../constants/typecode';
 import { GuestCardProps, optionsType } from '../interfaces';
 import {
@@ -32,10 +35,11 @@ const GuestCard = (props: GuestCardProps) => {
         hotel_id,
         guestCardClickHandler,
         getAllTemplateContent,
+        qrLink,
+        generateQRLink,
     } = props;
     const [templateType, setTemplateType] = useState(template_type || '');
     const [updateLoading, setUpdateLoading] = useState(false);
-    const [qrLink, setQRLink] = useState('');
     const [templateContent, setTemplateContent] = useState({
         name: name,
         ...content,
@@ -78,19 +82,7 @@ const GuestCard = (props: GuestCardProps) => {
             setUpdateLoading(false);
         }
     };
-    const generateQRLink = async (id: Number) => {
-        try {
-            const response = await createQRLink(id);
-            if (response.status === 200) {
-                const result = await response.json();
-                console.log(result);
-                if (result && result.response) {
-                    let hotelLink = `${guestAppBaseURL}/welcome/${result.response}`;
-                    setQRLink(hotelLink);
-                }
-            }
-        } catch (error) {}
-    };
+
     const copyToClipboard = () => {
         navigator.clipboard.writeText(qrLink);
         toast({
@@ -116,9 +108,22 @@ const GuestCard = (props: GuestCardProps) => {
                 onClick={() => guestCardClickHandler(id)}
             >
                 <div className='primary-name'>
-                    <span className='name'>{name}</span>
+                    <span
+                        className={
+                            'name ' +
+                            (GOLD.includes(name)
+                                ? 'gold'
+                                : PLATINUM.includes(name)
+                                ? 'platinum'
+                                : TITANIUM.includes(name)
+                                ? 'titanium'
+                                : '')
+                        }
+                    >
+                        {name}
+                    </span>
                     <small>Guest Name:</small> {templateContent['guestName']} ||{' '}
-                    <small>Template :</small> {templateType}
+                    <small>Membership :</small> {templateType}
                 </div>
                 <div className='primary-btn'>
                     <button className='btn btn-icon'>
@@ -131,7 +136,9 @@ const GuestCard = (props: GuestCardProps) => {
                     <SimpleGrid columns={3} spacing={5}>
                         <Box>
                             <FormControl mb={3}>
-                                <FormLabel>Template Type</FormLabel>
+                                <FormLabel>
+                                    Marriott Bonvoy Membership
+                                </FormLabel>
                                 <Select
                                     placeholder='Select option'
                                     name='templateType'
@@ -139,6 +146,7 @@ const GuestCard = (props: GuestCardProps) => {
                                     onChange={(e) =>
                                         setTemplateType(e.target.value)
                                     }
+                                    disabled
                                 >
                                     {templateList.map((template, index) => (
                                         <option
@@ -153,7 +161,7 @@ const GuestCard = (props: GuestCardProps) => {
                         </Box>
                         <Box>
                             <FormControl mb={3}>
-                                <FormLabel>Template name</FormLabel>
+                                <FormLabel>QR Code Number</FormLabel>
                                 <Select
                                     placeholder='Select option'
                                     name='name'
@@ -161,6 +169,7 @@ const GuestCard = (props: GuestCardProps) => {
                                     onChange={(e) =>
                                         setTemplateName(e.target.value)
                                     }
+                                    disabled
                                 >
                                     {optionList.map((template, index) => (
                                         <option
@@ -226,7 +235,7 @@ const GuestCard = (props: GuestCardProps) => {
                             onClick={() => generateQRLink(id)}
                             disabled={updateLoading}
                         >
-                            generate QR Link
+                            Generate QR Link
                         </button>
                         {qrLink && (
                             <div className='qr-link-wrapper'>

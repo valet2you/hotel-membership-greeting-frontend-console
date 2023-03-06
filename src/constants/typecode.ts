@@ -119,3 +119,7 @@ export const optionList = [
     { value: 'T9', name: 'T9' },
     { value: 'T10', name: 'T10' },
 ];
+
+export const GOLD = ["G1","G2","G3","G4","G5","G6","G7","G8","G9","G10"]
+export const PLATINUM = ["P1","P2","P3","P4","P5","P6","P7","P8","P9","P10"]
+export const TITANIUM = ["T1","T2","T3","T4","T5","T6","T7","T8","T9","T10"]
