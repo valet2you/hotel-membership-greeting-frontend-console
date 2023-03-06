@@ -156,3 +156,17 @@ export const createQRLink = (templateID: Number) => {
     });
     return response;
 };
+
+export const deleteTemplate  =(templateID:number)=>{
+
+    const token = getCookie('__user-token');
+    const response = fetch(baseURL + `/template-contents/${templateID}`, {
+        method: 'DELETE',
+        mode: 'cors',
+        headers: {
+            'Content-Type': 'application/json',
+            Authorization: `${token}`,
+        },
+    });
+    return response;
+}

@@ -19,8 +19,6 @@ import {
 } from '../constants/typecode';
 import { GuestCardProps, optionsType } from '../interfaces';
 import {
-    createQRLink,
-    guestAppBaseURL,
     updateTemplateContent,
 } from '../services/apiService';
 import { useToast } from '@chakra-ui/react';
