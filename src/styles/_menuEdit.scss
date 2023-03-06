@@ -119,6 +119,8 @@
         margin: auto;
         position: relative;
         width: 300px;
+        position: sticky;
+        top: 0;
         iframe {
             border: none;
             border-radius: 26px;
