@@ -6,6 +6,11 @@ export const baseURL =
         ? `https://prod-hmg.valet2you.in`
         : 'https://dev-hmg.valet2you.in';
 
+export const guestAppBaseURL =
+    process.env.REACT_APP_NODE_ENV === 'production'
+        ? `https://main.d1yxbpv58iwpc3.amplifyapp.com`
+        : 'https://dev.d1yxbpv58iwpc3.amplifyapp.com';
+
 // admin
 // Secure@2033
 

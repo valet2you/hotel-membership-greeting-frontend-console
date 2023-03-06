@@ -16,8 +16,8 @@ import {
 } from '../constants/typecode';
 import { GuestCardProps, optionsType } from '../interfaces';
 import {
-    baseURL,
     createQRLink,
+    guestAppBaseURL,
     updateTemplateContent,
 } from '../services/apiService';
 import { useToast } from '@chakra-ui/react';
@@ -85,7 +85,7 @@ const GuestCard = (props: GuestCardProps) => {
                 const result = await response.json();
                 console.log(result);
                 if (result && result.response) {
-                    let hotelLink = `${baseURL}/welcome/${result.response}`;
+                    let hotelLink = `${guestAppBaseURL}/welcome/${result.response}`;
                     setQRLink(hotelLink);
                 }
             }
