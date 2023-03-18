@@ -1,6 +1,8 @@
 import axios from 'axios';
-import { getCookie } from '../helpers/cookieHelper';
+import { deleteCookie, getCookie } from '../helpers/cookieHelper';
 import { templateContent, userLoginData } from '../interfaces';
+import fetchIntercept from 'fetch-intercept';
+
 export const baseURL =
     process.env.REACT_APP_NODE_ENV === 'production'
         ? `https://prod-hmg.valet2you.in`
@@ -25,13 +27,41 @@ axios.defaults.headers.post['Content-Type'] = 'application/json;charset=utf-8';
 axios.defaults.withCredentials = true;
 // axios.defaults.headers.post['Content-Type'] ='application/x-www-form-urlencoded';
 
+const unregister = fetchIntercept.register({
+    request: function (url, config) {
+        // Modify the url or config here
+        return [url, config];
+    },
+
+    requestError: function (error) {
+        // Called when an error occured during another 'request' interceptor call
+        return Promise.reject(error);
+    },
+
+    response: function (response) {
+        // Modify the reponse object
+        console.log(response)
+        if(response.status === 401){
+            deleteCookie('__user-token');
+            window.location.replace('/login')
+        }
+
+        return response;
+    },
+
+    responseError: function (error) {
+        // Handle an fetch error
+        return Promise.reject(error);
+    }
+});
 // Add a request interceptor
 axios.interceptors.request.use(
     function (config) {
         const token = getCookie('__user-token');
         if (token) {
-            config.headers.common['Authorization'] = token;
+            config.headers['Authorization'] = token;
         }
+        console.log(config)
         return config;
     },
     function (error) {
@@ -47,10 +77,10 @@ axios.interceptors.response.use(
     },
     function (error) {
         const { response } = error;
-        const { request, ...errorObject } = response;
-        if (errorObject.status === 401) {
-            window.location.replace('/');
-        }
+        // const { request, ...errorObject } = response;
+        // if (errorObject.status === 401) {
+        //     window.location.replace('/');
+        // }
 
         // Any status codes that falls outside the range of 2xx cause this function to trigger
         // Do something with response error
