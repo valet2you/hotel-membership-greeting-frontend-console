@@ -20,13 +20,15 @@ const Dashboard = () => {
 
     const getAllTemplateContent = async () => {
         setIsLoading(true);
-        setSelectedUserID(null);
         try {
             const response = await fetchAllTemplateContent();
             if (response.status === 200) {
                 const result = await response.json();
                 if (result.response && result.response.length) {
                     setGuestList(result.response || []);
+                    let firstDefaultID = selectedUserID ? selectedUserID :result.response[0].id;
+                    setSelectedUserID(firstDefaultID)
+                    generateQRLink(firstDefaultID)
                 }
             }
         } catch (error) {
@@ -48,8 +50,8 @@ const Dashboard = () => {
                 },
             };
             const response = await createTemplateContent(body);
-            if(response.status === 201) {
-                getAllTemplateContent()
+            if (response.status === 201) {
+                getAllTemplateContent();
             }
         } catch (error) {}
     };
@@ -58,8 +60,8 @@ const Dashboard = () => {
             const response = await generateHotelID();
         } catch (error) {}
     };
-
     const guestCardClickHandler = (id: any) => {
+        
         if (id !== selectedUserID) {
             setSelectedUserID(id);
             generateQRLink(id);
@@ -68,11 +70,11 @@ const Dashboard = () => {
         }
     };
     const generateQRLink = async (id: Number) => {
+        setQRLink('')
         try {
             const response = await createQRLink(id);
             if (response.status === 200) {
                 const result = await response.json();
-                console.log(result);
                 if (result && result.response) {
                     let hotelLink = `${guestAppBaseURL}/welcome/${result.response}`;
                     setQRLink(hotelLink);
@@ -107,7 +109,6 @@ const Dashboard = () => {
                                 name={guest.name}
                                 qrLink={qrLink}
                                 generateQRLink={generateQRLink}
-
                             />
                         ))
                     )}
@@ -126,8 +127,7 @@ const Dashboard = () => {
                     </button>
                 </div> */}
             </div>
-
-            <div className='guest-app-preview'>
+            {qrLink && <div className='guest-app-preview'>
                 <div className='mobile-view'>
                     <iframe
                         src={qrLink}
@@ -136,7 +136,7 @@ const Dashboard = () => {
                         title='mobile-view'
                     ></iframe>
                 </div>
-            </div>
+            </div>}
         </div>
     );
 };

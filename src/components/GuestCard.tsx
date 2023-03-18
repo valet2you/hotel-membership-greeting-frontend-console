@@ -65,8 +65,6 @@ const GuestCard = (props: GuestCardProps) => {
             const response = await updateTemplateContent(data);
             if (response.status === 200) {
                 const result = await response.json();
-                console.log(result);
-
                 toast({
                     title: 'Template updated successfully',
                     status: 'success',
