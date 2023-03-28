@@ -40,7 +40,6 @@ const unregister = fetchIntercept.register({
 
     response: function (response) {
         // Modify the reponse object
-        console.log(response)
         if(response.status === 401){
             deleteCookie('__user-token');
             window.location.replace('/login')
@@ -61,7 +60,6 @@ axios.interceptors.request.use(
         if (token) {
             config.headers['Authorization'] = token;
         }
-        console.log(config)
         return config;
     },
     function (error) {
