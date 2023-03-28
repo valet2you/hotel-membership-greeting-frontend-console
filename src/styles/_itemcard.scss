@@ -257,23 +257,26 @@
         }
     }
 }
-.actions-wrapper{
+.actions-wrapper {
     display: flex;
     margin-top: 1rem;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
     button{
         white-space: nowrap;
     }
 }
 
 .qr-link-wrapper{
-    display: inline-flex;
-    // width: 100%;
+    display: flex;
+    width: 100%;
     /* height: 10px; */
     border: 1px solid #adadad;
     padding: 0px;
     border-radius: 8px;
     height: 2.5rem;
-    margin-left: 2px;
+    // margin-left: 2px;
     .qr-link{
         background-color: #e2e8f0;
         width: 100%;
@@ -282,7 +285,7 @@
         padding: 10px 1rem;
         white-space: nowrap;
         overflow: hidden;
-        max-width: 30rem;
+        // max-width: 30rem;
         border-radius: 8px 0px 0 8px;
     }
     .qr-copy-btn{

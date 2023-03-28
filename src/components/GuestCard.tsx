@@ -161,7 +161,7 @@ const GuestCard = (props: GuestCardProps) => {
                                 <Select
                                     placeholder='Select option'
                                     name='name'
-                                    value={templateContent.name}
+                                    value={templateName}
                                     onChange={(e) =>
                                         setTemplateName(e.target.value)
                                     }
@@ -226,13 +226,13 @@ const GuestCard = (props: GuestCardProps) => {
                         >
                             {updateLoading ? ' Updating...' : 'Update'}
                         </button>
-                        <button
+                        {/* <button
                             className='btn btn-primary'
                             onClick={() => generateQRLink(id)}
                             disabled={updateLoading}
                         >
                             Generate QR Link
-                        </button>
+                        </button> */}
                         {qrLink && (
                             <div className='qr-link-wrapper'>
                                 <div className='qr-link'>{qrLink}</div>

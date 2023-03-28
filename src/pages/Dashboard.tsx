@@ -40,9 +40,9 @@ const Dashboard = () => {
         try {
             const body = {
                 id: 10,
-                name: 'P1',
+                name: 'T1',
                 hotel_id: 1,
-                template_type: 'PLATINUM',
+                template_type: 'TITANIUM',
                 content: {
                     welcomeTitle: 'Welcom to W Maldives',
                     guestName: 'new guest user',
@@ -82,6 +82,7 @@ const Dashboard = () => {
             }
         } catch (error) {}
     };
+    console.log(guestList)
     return (
         <div className='dashboard-container'>
             <div className='guest-list-container'>
