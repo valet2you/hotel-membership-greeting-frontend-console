@@ -26,9 +26,11 @@ const Dashboard = () => {
                 const result = await response.json();
                 if (result.response && result.response.length) {
                     setGuestList(result.response || []);
-                    let firstDefaultID = selectedUserID ? selectedUserID :result.response[0].id;
-                    setSelectedUserID(firstDefaultID)
-                    generateQRLink(firstDefaultID)
+                    let firstDefaultID = selectedUserID
+                        ? selectedUserID
+                        : result.response[0].id;
+                    setSelectedUserID(firstDefaultID);
+                    generateQRLink(firstDefaultID);
                 }
             }
         } catch (error) {
@@ -61,7 +63,6 @@ const Dashboard = () => {
         } catch (error) {}
     };
     const guestCardClickHandler = (id: any) => {
-        
         if (id !== selectedUserID) {
             setSelectedUserID(id);
             generateQRLink(id);
@@ -70,7 +71,7 @@ const Dashboard = () => {
         }
     };
     const generateQRLink = async (id: Number) => {
-        setQRLink('')
+        setQRLink('');
         try {
             const response = await createQRLink(id);
             if (response.status === 200) {
@@ -82,7 +83,7 @@ const Dashboard = () => {
             }
         } catch (error) {}
     };
-    console.log(guestList)
+    console.log(qrLink)
     return (
         <div className='dashboard-container'>
             <div className='guest-list-container'>
@@ -128,16 +129,18 @@ const Dashboard = () => {
                     </button>
                 </div> */}
             </div>
-            {qrLink && <div className='guest-app-preview'>
-                <div className='mobile-view'>
-                    <iframe
-                        src={qrLink}
-                        height='554'
-                        width='262'
-                        title='mobile-view'
-                    ></iframe>
+            {qrLink && (
+                <div className='guest-app-preview'>
+                    <div className='mobile-view'>
+                        <iframe
+                            src={qrLink}
+                            height='554'
+                            width='262'
+                            title='mobile-view'
+                        ></iframe>
+                    </div>
                 </div>
-            </div>}
+            )}
         </div>
     );
 };
