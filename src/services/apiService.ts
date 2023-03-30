@@ -10,7 +10,7 @@ export const baseURL =
 
 export const guestAppBaseURL =
     process.env.REACT_APP_NODE_ENV === 'production'
-        ? `https://main.d1yxbpv58iwpc3.amplifyapp.com`
+        ? `https://mb.vserve-protecht.com`
         : 'https://dev.d1yxbpv58iwpc3.amplifyapp.com';
 
 // admin
